@@ -1,14 +1,16 @@
 import React from "react";
-import "./QuestionPage.scss";
+import "./QuestionListPage.scss";
 import QuestionList from "../../../components/Questions/QuestionList";
 
-export default function QuestionPage() {
+export default function QuestionListPage() {
 	return (
-		<div className="body pt-4">
-			<div className="question-page container-lg">
+		<>
+			<div className="container-lg">
 				<h1 className="title">Câu hỏi</h1>
+			</div>
+			<div className="box container-lg">
 				<QuestionList />
 			</div>
-		</div>
+		</>
 	);
 }
