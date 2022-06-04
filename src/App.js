@@ -18,6 +18,7 @@ function App() {
 					<Route path="" element={<HomePage />}></Route>
 					<Route path="questions" element={<QuestionsPage />}>
 						<Route path="" element={<QuestionListPage />}></Route>
+						<Route path="new" element={<QuestionEditPage />}></Route>
 						<Route
 							path=":questionId/edit"
 							element={<QuestionEditPage />}

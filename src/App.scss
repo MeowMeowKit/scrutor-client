@@ -1,5 +1,7 @@
 .app {
+	min-height: 100vh;
+
 	padding-bottom: 2rem;
-	min-height: calc(100vh - 72px);
+	// min-height: calc(100vh - 72px);
 	background-color: #f3faff;
 }

@@ -1,14 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./QuestionEditPage.scss";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Question from "../../../models/Question";
 
 export default function QuestionEditPage() {
 	let { questionId } = useParams();
+	const location = useLocation();
 
 	const questions = useSelector((state) => state.questions.questions);
-	const [question, setQuestion] = useState(new Question());
+	const [question, setQuestion] = useState({
+		questionId: "",
+		content: "",
+		type: "SAMC",
+		difficulty: 0,
+		teacherId: "teacher1",
+		options: [],
+		tags: [],
+	});
 
 	const [hasFillAnswer, setHasFillAnswer] = useState(
 		question.type === "F" && question.options.length > 0
@@ -142,7 +151,11 @@ export default function QuestionEditPage() {
 	return (
 		<>
 			<div className="container-lg">
-				<h1>Chỉnh sửa câu hỏi</h1>
+				{location.pathname.includes ? (
+					<h1>Tạo câu hỏi</h1>
+				) : (
+					<h1>Chỉnh sửa câu hỏi</h1>
+				)}
 			</div>
 			<div className="box container-lg">
 				<form>
@@ -421,7 +434,7 @@ export default function QuestionEditPage() {
 					</div>
 					<div className="d-flex justify-content-end">
 						<button type="button" className="btn update-btn" onClick={onSubmit}>
-							Cập nhật
+							{location.pathname ? "Tạo câu hỏi" : "Cập nhật"}
 						</button>
 					</div>
 				</form>

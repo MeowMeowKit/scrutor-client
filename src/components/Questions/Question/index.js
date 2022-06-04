@@ -33,6 +33,7 @@ export default function Question(props) {
 			<div className="col-4 col-md-5 col-lg-7 ps-4 pe-4">
 				<p className="content">{props.question.content}</p>
 			</div>
+
 			<div className="d-none d-md-block col-2 col-lg-2 ps-4 pe-4">
 				<p className="tags">
 					{props.question.tags.map((tag) => {
@@ -46,9 +47,13 @@ export default function Question(props) {
 					})}
 				</p>
 			</div>
-			<p className="difficulty col-auto">
-				{props.question.difficulty} <i className="fa-solid fa-star"></i>
-			</p>
+
+			<div className="difficulty col-auto ">
+				<p>
+					{props.question.difficulty} <i className="fa-solid fa-star"></i>
+				</p>
+			</div>
+
 			<div className="buttons col-4 col-md-2 col-lg-2 d-flex justify-content-end">
 				<button className="btn btn-warning me-2">
 					<i className="fa-solid fa-pen-to-square"></i>
