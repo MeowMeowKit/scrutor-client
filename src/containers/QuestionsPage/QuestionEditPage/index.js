@@ -16,6 +16,8 @@ export default function QuestionEditPage() {
 
 	const lastOptionInputRef = useRef(null);
 
+	const [tagInput, setTagInput] = useState("");
+
 	useEffect(() => {
 		questions.map((q) => {
 			if (q.questionId === questionId) {
@@ -77,21 +79,21 @@ export default function QuestionEditPage() {
 	};
 
 	const onChangeQuestionOption = (e, i) => {
-		let newOptions = [...question.options];
-		newOptions[i] = { ...newOptions[i], content: e.target.value };
-		setQuestion({ ...question, options: newOptions });
+		let options = [...question.options];
+		options[i] = { ...options[i], content: e.target.value };
+		setQuestion({ ...question, options });
 	};
 
 	const onAddOption = (i) => {
-		let newOptions = [...question.options];
-		newOptions.push({ content: "", isCorrect: false });
-		setQuestion({ ...question, options: newOptions });
+		let options = [...question.options];
+		options.push({ content: "", isCorrect: false });
+		setQuestion({ ...question, options });
 	};
 
 	const onDeleteOption = (i) => {
-		let newOptions = [...question.options];
-		newOptions.splice(i, 1);
-		setQuestion({ ...question, options: newOptions });
+		let options = [...question.options];
+		options.splice(i, 1);
+		setQuestion({ ...question, options });
 	};
 
 	const onToggleFillAnswer = () => {
@@ -99,9 +101,33 @@ export default function QuestionEditPage() {
 	};
 
 	const onChangeFillAnswer = (e) => {
-		let newOptions = [...question.options];
-		newOptions[0] = { ...newOptions[0], content: e.target.value };
-		setQuestion({ ...question, options: newOptions });
+		let options = [...question.options];
+		options[0] = { ...options[0], content: e.target.value };
+		setQuestion({ ...question, options });
+	};
+
+	const onChangeTagInput = (e) => {
+		setTagInput(e.target.value);
+	};
+
+	const onDeleteTag = (i) => {
+		const tags = [...question.tags];
+		tags.splice(i, 1);
+		setQuestion({ ...question, tags });
+	};
+
+	const onAddTag = () => {
+		const tags = [...question.tags];
+		tags.push(tagInput);
+		setQuestion({ ...question, tags });
+		setTagInput("");
+	};
+
+	const onKeyDownTagInput = (e) => {
+		// console.log(e.key);
+		if (e.key.toLowerCase() === "enter") {
+			onAddTag();
+		}
 	};
 
 	const onSubmit = () => {
@@ -116,7 +142,7 @@ export default function QuestionEditPage() {
 	return (
 		<>
 			<div className="container-lg">
-				<h1>Câu hỏi</h1>
+				<h1>Chỉnh sửa câu hỏi</h1>
 			</div>
 			<div className="box container-lg">
 				<form>
@@ -359,6 +385,9 @@ export default function QuestionEditPage() {
 									<button
 										type="button"
 										className="tag-delete-btn d-inline-block"
+										onClick={() => {
+											onDeleteTag(index);
+										}}
 									>
 										<i className="fa-solid fa-xmark"></i>
 									</button>
@@ -370,8 +399,21 @@ export default function QuestionEditPage() {
 									type="text"
 									className="tag-input d-inline-block w-50"
 									placeholder="Thêm thẻ"
+									value={tagInput}
+									onChange={(e) => {
+										onChangeTagInput(e);
+									}}
+									onKeyDown={(e) => {
+										onKeyDownTagInput(e);
+									}}
 								/>
-								<button type="button" className="add-tag-btn d-inline-block">
+								<button
+									type="button"
+									className="add-tag-btn d-inline-block"
+									onClick={() => {
+										onAddTag();
+									}}
+								>
 									<i className="fa-solid fa-plus"></i>
 								</button>
 							</div>
