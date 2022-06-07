@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./QuestionEditPage.scss";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Question from "../../../models/Question";
 
 export default function QuestionEditPage() {
 	let { questionId } = useParams();
@@ -149,7 +148,7 @@ export default function QuestionEditPage() {
 	};
 
 	return (
-		<>
+		<div className="question-edit-page">
 			<div className="container-lg">
 				{location.pathname.includes ? (
 					<h1>Tạo câu hỏi</h1>
@@ -160,9 +159,9 @@ export default function QuestionEditPage() {
 			<div className="box container-lg">
 				<form>
 					<div className="mb-2">
-						<h5>Loại câu hỏi</h5>
+						{/* <h5>Loại câu hỏi</h5> */}
 						<select
-							className="form-select"
+							className="d-inline-block form-select w-50 me-4"
 							name=""
 							id=""
 							selected={question.type}
@@ -174,10 +173,22 @@ export default function QuestionEditPage() {
 							<option value="MAMC">Trắc nghiệm nhiều đáp án</option>
 							<option value="F">Tự luận</option>
 						</select>
+
+						<div className="d-inline-block">
+							<input
+								type="number"
+								className="d-inline-block form-control me-2"
+								value={question.difficulty || 0}
+								onChange={(e) => {
+									onChangeQuestionDifficulty(e);
+								}}
+							/>
+							<i class="fa-solid fa-star"></i>
+						</div>
 					</div>
 
 					<div className="mt-3 mb-2">
-						<h5>Đề bài</h5>
+						{/* <h5>Đề bài</h5> */}
 						<textarea
 							className="form-control p-2"
 							placeholder="Nhập đề bài"
@@ -191,20 +202,10 @@ export default function QuestionEditPage() {
 					</div>
 
 					{/* Difficulty */}
-					<div className="mt-3 mb-2">
-						<h5>Độ khó</h5>
-						<input
-							type="number"
-							className="form-control"
-							value={question.difficulty || 0}
-							onChange={(e) => {
-								onChangeQuestionDifficulty(e);
-							}}
-						/>
-					</div>
+					<div className="mt-3 mb-2">{/* <h5>Độ khó</h5> */}</div>
 
 					<div className="mt-3 d-flex align-items-center">
-						<h5 className="d-inline-block me-2">Đáp án</h5>
+						{/* <h5 className="d-inline-block me-2">Đáp án</h5> */}
 
 						{/* If it is a fill question, user can choose to enable answer*/}
 						{question.type === "F" ? (
@@ -386,7 +387,7 @@ export default function QuestionEditPage() {
 					)}
 
 					<div className="mt-3 mb-2">
-						<h5>Thẻ</h5>
+						{/* <h5>Thẻ</h5> */}
 
 						<div className="tag-container d-inline-block">
 							{question.tags?.map((t, index) => (
@@ -439,6 +440,6 @@ export default function QuestionEditPage() {
 					</div>
 				</form>
 			</div>
-		</>
+		</div>
 	);
 }
