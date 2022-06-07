@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import questionsReducer from "./questionsSlice";
 import authReducer from "./authSlice";
+import questionsReducer from "./questionsSlice";
+import quizzesReducer from "./quizzesSlice";
 
 export default configureStore({
 	reducer: {
-		questions: questionsReducer,
 		auth: authReducer,
+		questions: questionsReducer,
+		quizzes: quizzesReducer,
 	},
 });

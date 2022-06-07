@@ -7,7 +7,7 @@ import ClassesPage from "./containers/ClassesPage";
 
 import QuestionListPage from "./containers/QuestionsPage/QuestionListPage";
 import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage";
-import QuizPage from "./containers/QuizzesPage";
+import QuizzesPage from "./containers/QuizzesPage";
 import { useDispatch, useSelector } from "react-redux";
 import AuthedHeader from "./components/AuthedHeader";
 import UnauthedHeader from "./components/UnauthedHeader";
@@ -15,6 +15,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Modal } from "bootstrap";
 import { authActions } from "./utils/authSlice";
+import QuizListPage from "./containers/QuizzesPage/QuizListPage";
+import QuizEditPage from "./containers/QuizzesPage/QuizEditPage";
 
 function App() {
 	const user = useSelector((state) => state.auth.user);
@@ -22,6 +24,8 @@ function App() {
 
 	const loginModalRef = useRef();
 	const registerModalRef = useRef();
+	let loginModal = null;
+	let registerModal = null;
 
 	const [loginForm, setLoginForm] = useState({
 		email: "",
@@ -36,24 +40,29 @@ function App() {
 		password: "",
 	});
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		loginModal = new Modal(loginModalRef.current);
+		registerModal = new Modal(registerModalRef.current);
+	}, []);
 
 	const showLoginModal = () => {
-		const loginModal = new Modal(loginModalRef.current);
 		loginModal.show();
 	};
 
 	const showRegisterModal = () => {
-		const registerModal = new Modal(registerModalRef.current);
 		registerModal.show();
 	};
 
 	const onLogin = () => {
 		// Fake login
 		dispatch(authActions.login());
+
+		loginModal.hide();
 	};
 
-	const onRegister = () => {};
+	const onRegister = () => {
+		registerModal.hide();
+	};
 
 	return (
 		<div className="app">
@@ -268,7 +277,10 @@ function App() {
 							element={<QuestionEditPage />}
 						></Route>
 					</Route>
-					<Route path="quizzes" element={<QuizPage />}></Route>
+					<Route path="quizzes" element={<QuizzesPage />}>
+						<Route path="" element={<QuizListPage />}></Route>
+						<Route path=":quizId/edit" element={<QuizEditPage />}></Route>
+					</Route>
 					<Route path="classes" element={<ClassesPage />}></Route>
 				</Routes>
 			</div>
