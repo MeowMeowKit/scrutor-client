@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Question from "../models/Question";
-import QuestionOption from "../models/QuestionOption";
 
 export const questionsSlice = createSlice({
 	name: "questions",
