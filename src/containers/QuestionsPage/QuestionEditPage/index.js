@@ -157,8 +157,15 @@ export default function QuestionEditPage() {
 					question: submitQuestion,
 				})
 			);
-			navigate("/questions");
+		} else {
+			dispatch(
+				questionsActions.update({
+					id: questionId,
+					newQuestion: submitQuestion,
+				})
+			);
 		}
+		navigate("/questions");
 	};
 
 	return (

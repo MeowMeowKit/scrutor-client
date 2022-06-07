@@ -122,6 +122,15 @@ export const questionsSlice = createSlice({
 			const { id } = action.payload;
 			state.questions = state.questions.filter((q) => q.questionId !== id);
 		},
+		update(state, action) {
+			const { id, newQuestion } = action.payload;
+			state.questions = state.questions.map((q) => {
+				if (q.questionId === id) {
+					return { ...newQuestion };
+				}
+				return q;
+			});
+		},
 	},
 });
 
