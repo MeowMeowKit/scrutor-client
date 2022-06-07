@@ -23,6 +23,7 @@
 
 	.tags {
 		line-height: 1.5rem;
+		// min-height: 24px;
 		max-height: 3rem;
 		color: #9a9a9a;
 	}
@@ -44,16 +45,11 @@
 		text-align: center;
 	}
 
-	.buttons {
-		// display: flex;
-		// flex-direction: row-reverse;
-		// justify-content: end;
-	}
-
 	.btn {
 		padding: 0;
 		width: 32px;
 		height: 32px;
+		z-index: 2;
 	}
 }
 

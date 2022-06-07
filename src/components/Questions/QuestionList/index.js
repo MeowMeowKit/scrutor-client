@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Question from "../Question";
 import "./QuestionList.scss";
 
@@ -20,15 +20,9 @@ export default function QuestionList(props) {
 					</button>
 				</div>
 			</div> */}
-			<button
-				type="button"
-				className="add-question-btn btn mb-4"
-				onClick={() => {
-					navigate("./new");
-				}}
-			>
+			<Link type="button" className="add-question-btn btn mb-4" to="./new">
 				+ Tạo câu hỏi
-			</button>
+			</Link>
 			<div className="row table-header">
 				<div className="col-auto pe-3"></div>
 				<div className="col-4 col-md-5 col-lg-7 ps-4 pe-4">

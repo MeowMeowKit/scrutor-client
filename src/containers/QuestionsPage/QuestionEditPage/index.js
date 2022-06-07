@@ -1,15 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./QuestionEditPage.scss";
-import { useLocation, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { questionsActions } from "../../../utils/questionsSlice";
+import { v4 as uuidv4 } from "uuid";
 
 export default function QuestionEditPage() {
 	let { questionId } = useParams();
 	const location = useLocation();
 
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const questions = useSelector((state) => state.questions.questions);
 	const [question, setQuestion] = useState({
-		questionId: "",
+		questionId: uuidv4(),
 		content: "",
 		type: "SAMC",
 		difficulty: 0,
@@ -27,6 +32,7 @@ export default function QuestionEditPage() {
 	const [tagInput, setTagInput] = useState("");
 
 	useEffect(() => {
+		console.log(uuidv4());
 		questions.map((q) => {
 			if (q.questionId === questionId) {
 				setQuestion(q);
@@ -145,12 +151,20 @@ export default function QuestionEditPage() {
 			options = [{ content: options[0].content, isCorrect: true }];
 		submitQuestion.options = [...options];
 		console.log(submitQuestion);
+		if (location.pathname.includes("new")) {
+			dispatch(
+				questionsActions.add({
+					question: submitQuestion,
+				})
+			);
+			navigate("/questions");
+		}
 	};
 
 	return (
 		<div className="question-edit-page">
 			<div className="container-lg">
-				{location.pathname.includes ? (
+				{location.pathname.includes("new") ? (
 					<h1>Tạo câu hỏi</h1>
 				) : (
 					<h1>Chỉnh sửa câu hỏi</h1>
@@ -183,7 +197,7 @@ export default function QuestionEditPage() {
 									onChangeQuestionDifficulty(e);
 								}}
 							/>
-							<i class="fa-solid fa-star"></i>
+							<i className="fa-solid fa-star"></i>
 						</div>
 					</div>
 

@@ -85,11 +85,42 @@ export const questionsSlice = createSlice({
 				],
 				tags: ["math"],
 			},
+			{
+				questionId: "4f02a1a7-e60a-4b7a-940f-6555f93b18af",
+				content: "",
+				type: "SAMC",
+				difficulty: 50,
+				teacherId: "teacher1",
+				options: [
+					{
+						content:
+							"A status of 200 to 299 signifies that the request was successful.",
+						isCorrect: true,
+					},
+					{
+						content: "A status of 300 to 399 is informational messages.",
+						isCorrect: false,
+					},
+					{
+						content: "A status of 400 to 499 indicates an error in the server",
+						isCorrect: false,
+					},
+					{
+						content: "A status of 500 to 599 indicates an error in the client.",
+						isCorrect: false,
+					},
+				],
+				tags: [],
+			},
 		],
 	},
 	reducers: {
 		add(state, action) {
-			state.questions.push(action.payload);
+			state.questions.push(action.payload.question);
+		},
+		remove(state, action) {
+			const { id } = action.payload;
+			state.questions = state.questions.filter((q) => q.questionId !== id);
 		},
 	},
 });
