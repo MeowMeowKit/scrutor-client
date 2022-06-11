@@ -8,6 +8,7 @@ export const quizzesSlice = createSlice({
 				quizId: "f5016af6-82d0-42e0-9027-125d39b78632",
 				quizName: "Bài kiểm tra chưa đặt tên",
 				description: "This is the quiz 1",
+				teacherId: "teacher1",
 				startAt: new Date("2022-06-01T06:00:00"),
 				endAt: new Date("2022-06-03T06:00:00"),
 				time: 2700000,
@@ -19,6 +20,7 @@ export const quizzesSlice = createSlice({
 						type: "SAMC",
 						difficulty: 50,
 						teacherId: "teacher1",
+						point: 10,
 						options: [
 							{
 								content:
@@ -55,6 +57,7 @@ export const quizzesSlice = createSlice({
 						type: "SAMC",
 						difficulty: 70,
 						teacherId: "teacher1",
+						point: 10,
 						options: [
 							{
 								content: "doGet(HttpServletRequest, HttpServletResponse);",
@@ -87,6 +90,7 @@ export const quizzesSlice = createSlice({
 						type: "F",
 						difficulty: 10,
 						teacherId: "teacher1",
+						point: 10,
 						options: [
 							{
 								content: "2",
@@ -101,6 +105,7 @@ export const quizzesSlice = createSlice({
 				quizId: "871679d8-98f6-4c66-8583-a1dbd75578a8",
 				quizName: "Bài kiểm tra chưa đặt tên",
 				description: "This is the quiz 2",
+				teacherId: "teacher1",
 				startAt: new Date("2022-06-01T06:00:00"),
 				endAt: new Date("2022-06-03T06:00:00"),
 				time: 2700000,
@@ -112,6 +117,7 @@ export const quizzesSlice = createSlice({
 						type: "SAMC",
 						difficulty: 50,
 						teacherId: "teacher1",
+						point: 10,
 						options: [
 							{
 								content:
@@ -147,6 +153,7 @@ export const quizzesSlice = createSlice({
 						type: "F",
 						difficulty: 10,
 						teacherId: "teacher1",
+						point: 10,
 						options: [
 							{
 								content: "2",
@@ -159,7 +166,17 @@ export const quizzesSlice = createSlice({
 			},
 		],
 	},
-	reducers: {},
+	reducers: {
+		update(state, action) {
+			const { id, newQuiz } = action.payload;
+			state.quizzes = state.quizzes.map((q) => {
+				if (q.quizId === id) {
+					return { ...newQuiz };
+				}
+				return q;
+			});
+		},
+	},
 });
 
 export const quizzesActions = quizzesSlice.actions;

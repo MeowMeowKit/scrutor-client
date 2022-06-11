@@ -9,8 +9,8 @@ import QuestionListPage from "./containers/QuestionsPage/QuestionListPage";
 import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage";
 import QuizzesPage from "./containers/QuizzesPage";
 import { useDispatch, useSelector } from "react-redux";
-import AuthedHeader from "./components/AuthedHeader";
-import UnauthedHeader from "./components/UnauthedHeader";
+import AuthedHeader from "./fragments/AuthedHeader";
+import UnauthedHeader from "./fragments/UnauthedHeader";
 import { useEffect, useRef, useState } from "react";
 
 import { Modal } from "bootstrap";

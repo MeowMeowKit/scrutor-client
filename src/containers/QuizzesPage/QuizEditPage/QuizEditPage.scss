@@ -1,0 +1,27 @@
+.quiz-edit-page {
+	.quiz-name-input {
+		border: none;
+		font-size: 1.75rem;
+	}
+
+	.quiz-description-input {
+		border: none;
+	}
+
+	.btn {
+		background-color: #049dd9;
+		color: #fff;
+	}
+
+	.point-input {
+		min-width: 72px;
+		width: 8%;
+	}
+
+	.remove-question-btn {
+		font-size: 1.75rem;
+		border: none;
+		background-color: transparent;
+		color: #f55050;
+	}
+}

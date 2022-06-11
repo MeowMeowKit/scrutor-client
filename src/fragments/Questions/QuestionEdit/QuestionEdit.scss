@@ -1,0 +1,77 @@
+.question-edit {
+	input[type="text"] {
+		width: calc(100% - 29px - 27px);
+	}
+
+	input[type="number"] {
+		min-width: 72px;
+		width: 8%;
+	}
+
+	.fa-star {
+		color: #049dd9;
+	}
+
+	select,
+	textarea {
+		width: calc(100% - 38px);
+	}
+
+	.option-delete-btn {
+		border: none;
+		background: none;
+		font-size: 1.5rem;
+		color: #a0a0a0;
+	}
+
+	.tag-container {
+		.tag {
+			background-color: #e4e4e4;
+			font-weight: normal;
+			color: #000;
+			// border-radius: 30%;
+			padding: 8px 12px;
+			margin-bottom: 4px;
+
+			p {
+				font-size: 1rem;
+				margin: 0;
+			}
+
+			.tag-delete-btn {
+				background-color: #f9f9f9;
+				border: none;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+			}
+
+			.tag-delete-btn:hover {
+				background-color: #c0c0c0;
+			}
+		}
+
+		.tag-input {
+			border: none;
+		}
+
+		.tag-input:focus {
+			outline: none;
+		}
+
+		.add-tag-btn {
+			background-color: transparent;
+			border: none;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+		}
+	}
+
+	.update-btn {
+		color: #fff;
+		font-weight: 500;
+		background-color: #049dd9;
+		margin: 0.75rem 36px 0 0;
+	}
+}

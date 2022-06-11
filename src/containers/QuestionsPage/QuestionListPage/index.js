@@ -1,6 +1,6 @@
 import React from "react";
 import "./QuestionListPage.scss";
-import QuestionList from "../../../components/Questions/QuestionList";
+import QuestionList from "../../../fragments/Questions/QuestionList";
 
 export default function QuestionListPage() {
 	return (
