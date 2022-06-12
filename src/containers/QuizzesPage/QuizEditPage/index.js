@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -28,13 +29,15 @@ export default function QuizEditPage() {
 		questions: [],
 	});
 
+	const quizTitleRef = useRef();
+
 	useEffect(() => {
 		quizzes.map((q) => {
 			if (q.quizId === quizId) {
-				console.log(q);
 				setQuiz(q);
 			}
 		});
+		// quizTitleRef.current.focus();
 	}, []);
 
 	const onChangeQuizName = (e) => {
@@ -78,6 +81,7 @@ export default function QuizEditPage() {
 	};
 
 	const onSubmitQuestion = (question) => {
+		console.log(question);
 		dispatch(
 			questionsActions.update({
 				id: question.questionId,
@@ -103,6 +107,7 @@ export default function QuizEditPage() {
 						type="text"
 						className="form-control quiz-name-input mb-1 d-inline-block"
 						placeholder="Tiêu đề"
+						ref={quizTitleRef}
 						value={quiz.quizName}
 						onChange={(e) => {
 							onChangeQuizName(e);

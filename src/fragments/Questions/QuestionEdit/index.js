@@ -1,30 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { questionsActions } from "../../../utils/questionsSlice";
 
 import "./QuestionEdit.scss";
 
 export const QuestionEdit = (props) => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-
 	const lastOptionInputRef = useRef(null);
 
 	const [tagInput, setTagInput] = useState("");
 
-	const [hasFillAnswer, setHasFillAnswer] = useState();
+	const [isAddedOption, setIsAddedOption] = useState(false);
+
+	const [hasFillAnswer, setHasFillAnswer] = useState(false);
 
 	useEffect(() => {
 		setHasFillAnswer(
 			props.question.type === "F" && props.question.options.length > 0
 		);
-	});
+	}, [props.question]);
 
 	useEffect(() => {
-		if (lastOptionInputRef.current) {
-			lastOptionInputRef.current.focus();
-		}
+		return () => {
+			if (lastOptionInputRef.current) {
+				lastOptionInputRef.current.focus();
+			}
+		};
 	}, [props.question.options.length]);
 
 	const onChangeQuestionType = (e) => {
@@ -79,6 +77,7 @@ export const QuestionEdit = (props) => {
 		let options = [...props.question.options];
 		options.push({ content: "", isCorrect: false });
 		props.setQuestion({ ...props.question, options });
+		setIsAddedOption(true);
 	};
 
 	const onDeleteOption = (i) => {
@@ -115,7 +114,6 @@ export const QuestionEdit = (props) => {
 	};
 
 	const onKeyDownTagInput = (e) => {
-		// console.log(e.key);
 		if (e.key.toLowerCase() === "enter") {
 			onAddTag();
 		}
@@ -135,7 +133,6 @@ export const QuestionEdit = (props) => {
 		<div className="question-edit">
 			<form>
 				<div className="mb-2">
-					{/* <h5>Loại câu hỏi</h5> */}
 					<select
 						className="d-inline-block form-select w-50 me-4"
 						name=""
@@ -163,7 +160,6 @@ export const QuestionEdit = (props) => {
 				</div>
 
 				<div className="mt-3 mb-2">
-					{/* <h5>Đề bài</h5> */}
 					<textarea
 						className="form-control p-2"
 						placeholder="Đề bài"
@@ -175,12 +171,7 @@ export const QuestionEdit = (props) => {
 					></textarea>
 				</div>
 
-				{/* Difficulty */}
-				<div className="mt-3 mb-2">{/* <h5>Độ khó</h5> */}</div>
-
 				<div className="mt-3 d-flex align-items-center">
-					{/* <h5 className="d-inline-block me-2">Đáp án</h5> */}
-
 					{/* If it is a fill props.question, user can choose to enable answer*/}
 					{props.question.type === "F" ? (
 						<div className="form-check form-switch d-inline-block">
@@ -239,7 +230,7 @@ export const QuestionEdit = (props) => {
 									type="text"
 									value={o.content}
 									ref={
-										index === props.question.options.length - 1
+										index === props.question.options.length - 1 && isAddedOption
 											? lastOptionInputRef
 											: undefined
 									}
@@ -278,7 +269,7 @@ export const QuestionEdit = (props) => {
 									type="text"
 									value={o.content}
 									ref={
-										index === props.question.options.length - 1
+										index === props.question.options.length - 1 && isAddedOption
 											? lastOptionInputRef
 											: undefined
 									}
@@ -359,8 +350,6 @@ export const QuestionEdit = (props) => {
 				)}
 
 				<div className="mt-3 mb-2">
-					{/* <h5>Thẻ</h5> */}
-
 					<div className="tag-container d-inline-block">
 						{props.question.tags?.map((t, index) => (
 							<div

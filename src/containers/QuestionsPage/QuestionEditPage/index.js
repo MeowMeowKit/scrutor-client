@@ -25,12 +25,10 @@ export default function QuestionEditPage() {
 	});
 
 	useEffect(() => {
+		// console.log(3);
 		questions.map((q) => {
 			if (q.questionId === questionId) {
 				setQuestion(q);
-				// if (q.type === "F" && q.options.length > 0) {
-				// 	setHasFillAnswer(true);
-				// }
 			}
 		});
 	}, []);

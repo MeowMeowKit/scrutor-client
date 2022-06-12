@@ -6,7 +6,6 @@ import "./QuestionList.scss";
 
 export default function QuestionList(props) {
 	const questions = useSelector((state) => state.questions.questions);
-	console.log(questions);
 
 	const navigate = useNavigate();
 
