@@ -1,4 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 import "./App.scss";
 
 import HomePage from "./containers/HomePage";

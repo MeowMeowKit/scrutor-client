@@ -1,25 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Question from "../Question";
 import "./QuestionList.scss";
 
 export default function QuestionList(props) {
-	const questions = useSelector((state) => state.questions.questions);
-
-	const navigate = useNavigate();
-
 	return (
 		<div className="container-lg">
-			{/* <div className="row">
-				<div className="col-auto pe-3"></div>
-				<div className="col-4 col-md-5 col-lg-7 ps-4 pe-4">
-					<button type="button" className="add-question-btn btn mb-4">
-						+ Tạo câu hỏi
-					</button>
-				</div>
-			</div> */}
-			<Link type="button" className="add-question-btn btn mb-4" to="./new">
+			<Link
+				type="button"
+				className="add-question-btn btn mb-4"
+				to="/questions/new"
+			>
 				+ Tạo câu hỏi
 			</Link>
 			<div className="row table-header">
@@ -35,11 +26,20 @@ export default function QuestionList(props) {
 				</div>
 				<div className="buttons col-4 col-md-2 col-lg-2 d-flex justify-content-end"></div>
 			</div>
-			{questions.map((q) => (
+			{props.questions.map((q, i) => (
 				<Question
+					mode={props.mode}
 					key={q.questionId}
-					index={questions.indexOf(q) + 1}
+					index={props.questions.indexOf(q) + 1}
 					question={q}
+					isChecked={q.isChecked}
+					toggleIsChecked={() => {
+						const newQuestions = props.questions.map((q, index) => {
+							if (index === i) return { ...q, isChecked: !q.isChecked };
+							else return q;
+						});
+						props.setQuestions(newQuestions);
+					}}
 				/>
 			))}
 		</div>

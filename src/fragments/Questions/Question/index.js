@@ -35,13 +35,25 @@ export default function Question(props) {
 	return (
 		<div
 			onClick={() => {
-				navigate(`./${question.questionId}/edit`);
+				if (props.mode !== "fixed")
+					navigate(`/questions/${question.questionId}/edit`);
 			}}
 			className="question row align-items-center"
 			id={question.questionId}
 		>
 			<div className="col-auto pe-3">
-				<input type="checkbox" className="" />
+				<input
+					type="checkbox"
+					className=""
+					checked={props.isChecked}
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
+					onChange={(e) => {
+						// e.stopPropagation();
+						props.toggleIsChecked();
+					}}
+				/>
 			</div>
 			<div className="col-4 col-md-5 col-lg-7 ps-4 pe-4">
 				<p className="content">{question.content}</p>
