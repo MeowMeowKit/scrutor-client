@@ -1,8 +1,12 @@
 import { Route, Routes } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
-
 import "./App.scss";
+
+import { authActions } from "./utils/authSlice";
 
 import HomePage from "./containers/HomePage";
 import QuestionsPage from "./containers/QuestionsPage";
@@ -11,24 +15,18 @@ import ClassesPage from "./containers/ClassesPage";
 import QuestionListPage from "./containers/QuestionsPage/QuestionListPage";
 import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage";
 import QuizzesPage from "./containers/QuizzesPage";
-import { useDispatch, useSelector } from "react-redux";
 import AuthedHeader from "./fragments/AuthedHeader";
 import UnauthedHeader from "./fragments/UnauthedHeader";
-import { useEffect, useRef, useState } from "react";
 
-import { Modal } from "bootstrap";
-import { authActions } from "./utils/authSlice";
+import Modal from "react-bootstrap/Modal";
 import QuizListPage from "./containers/QuizzesPage/QuizListPage";
 import QuizEditPage from "./containers/QuizzesPage/QuizEditPage";
+
+// const axios = require("axios").default;
 
 function App() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
-
-	const loginModalRef = useRef();
-	const registerModalRef = useRef();
-	let loginModal = null;
-	let registerModal = null;
 
 	const [loginForm, setLoginForm] = useState({
 		email: "",
@@ -43,28 +41,85 @@ function App() {
 		password: "",
 	});
 
-	useEffect(() => {
-		loginModal = new Modal(loginModalRef.current);
-		registerModal = new Modal(registerModalRef.current);
-	}, []);
+	const [isShowLoginModal, setIsShowLoginModal] = useState(false);
+	const [isShowRegisterModal, setIsShowRegisterModal] = useState(false);
 
-	const showLoginModal = () => {
-		loginModal.show();
+	const handleShowLoginModal = () => {
+		setIsShowLoginModal(true);
 	};
 
-	const showRegisterModal = () => {
-		registerModal.show();
+	const handleHideLoginModal = () => {
+		setIsShowLoginModal(false);
+	};
+
+	const handleShowRegisterModal = () => {
+		setIsShowRegisterModal(true);
+	};
+
+	const handleHideRegisterModal = () => {
+		setIsShowRegisterModal(false);
 	};
 
 	const onLogin = () => {
-		// Fake login
-		dispatch(authActions.login());
+		axios({
+			method: "post",
+			url: "http://localhost:8080/scrutor_server_war_exploded/auth/login",
+			data: {
+				email: loginForm.email,
+				password: loginForm.password,
+			},
+		}).then((res, err) => {
+			if (err) {
+				console.log("Error");
+			}
 
-		loginModal.hide();
+			dispatch(
+				authActions.set({
+					userId: res.data.userId,
+					email: res.data.userId,
+					fullName: res.data.fullName,
+					role: res.data.role,
+				})
+			);
+
+			// Reset login form
+			setLoginForm({
+				email: "",
+				password: "",
+				isRemember: false,
+			});
+
+			handleHideLoginModal();
+		});
 	};
 
 	const onRegister = () => {
-		registerModal.hide();
+		axios({
+			method: "post",
+			url: "http://localhost:8080/scrutor_server_war_exploded/auth/register",
+			data: {
+				fullName: registerForm.fullName,
+				email: registerForm.email,
+				password: registerForm.password,
+				role: registerForm.role,
+			},
+		}).then((res, err) => {
+			if (err) {
+				console.log("Error");
+			}
+
+			// Reset form
+			setRegisterForm({
+				role: "student",
+				fullName: "",
+				email: "",
+				password: "",
+			});
+
+			handleHideRegisterModal();
+
+			if (res.data != null) handleShowLoginModal();
+		});
 	};
 
 	return (
@@ -73,22 +128,21 @@ function App() {
 				<AuthedHeader />
 			) : (
 				<UnauthedHeader
-					showLoginModal={showLoginModal}
-					showRegisterModal={showRegisterModal}
+					showLoginModal={handleShowLoginModal}
+					showRegisterModal={handleShowRegisterModal}
 				/>
 			)}
 
-			<div
-				className="modal fade"
-				id="login-modal"
-				tabIndex="-1"
-				aria-labelledby="exampleModalLabel"
-				aria-hidden="true"
-				ref={loginModalRef}
+			<Modal
+				show={isShowLoginModal}
+				onHide={handleHideLoginModal}
+				keyboard={false}
+				className="modal"
+				dialogClassName="login-modal"
 			>
-				<div className="modal-dialog">
-					<div className="modal-content container">
-						<div className="row">
+				<Modal.Body>
+					<div className="login-modal-content container">
+						<div className="row login-modal-body">
 							<form className="form d-inline-block col-12 col-md-6 col-lg-4">
 								<h4 className="text-center">Đăng nhập</h4>
 
@@ -156,20 +210,19 @@ function App() {
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+				</Modal.Body>
+			</Modal>
 
-			<div
-				className="modal fade"
-				id="register-modal"
-				tabIndex="-1"
-				aria-labelledby="exampleModalLabel"
-				aria-hidden="true"
-				ref={registerModalRef}
+			<Modal
+				show={isShowRegisterModal}
+				onHide={handleHideRegisterModal}
+				keyboard={false}
+				className="modal"
+				dialogClassName="register-modal"
 			>
-				<div className="modal-dialog">
+				<Modal.Body>
 					<div className="modal-content container">
-						<div className="row">
+						<div className="row register-modal-body">
 							<form className="form d-inline-block col-12 col-md-6 col-lg-4">
 								<h4 className="text-center">Đăng ký</h4>
 
@@ -266,8 +319,8 @@ function App() {
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+				</Modal.Body>
+			</Modal>
 
 			<div className="body pt-4">
 				<Routes>

@@ -6,16 +6,14 @@ export const authSlice = createSlice({
 		user: null,
 	},
 	reducers: {
-		// Fake login
-		login(state, action) {
+		set(state, action) {
 			state.user = {
-				userId: "teacher1",
-				email: "teacher1@gmail.com",
-				fullName: "Teacher 1",
-				role: "teacher",
+				userId: action.payload.userId,
+				email: action.payload.email,
+				fullName: action.payload.fullName,
+				role: action.payload.role,
 			};
 		},
-		register(state, action) {},
 	},
 });
 

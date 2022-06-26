@@ -1,59 +1,74 @@
 @import "~bootstrap/scss/bootstrap";
 
+.login-modal,
+.register-modal {
+	width: 80%;
+	max-width: none;
+
+	.modal-body {
+		padding: 0;
+
+		.login-modal-content {
+			width: 100%;
+			max-width: none;
+		}
+	}
+}
+
 .app {
 	min-height: 100vh;
 
 	padding-bottom: 2rem;
 	background-color: #f3faff;
 
-	.modal {
-		width: 100%;
-		.modal-dialog {
-			margin: 0;
-			width: 100%;
-			height: 100%;
-			max-width: 100%;
-			position: relative;
-		}
-		.modal-content {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -60%);
-			border-radius: 8px;
-			border: none;
+	// .modal {
+	// 	width: 100%;
+	// 	.modal-dialog {
+	// 		margin: 0;
+	// 		width: 100%;
+	// 		height: 100%;
+	// 		max-width: 100%;
+	// 		position: relative;
+	// 	}
+	// 	.modal-content {
+	// 		position: absolute;
+	// 		top: 50%;
+	// 		left: 50%;
+	// 		transform: translate(-50%, -60%);
+	// 		border-radius: 8px;
+	// 		border: none;
 
-			.row {
-				.form {
-					border-radius: 8px 0 0 8px;
-					padding: 120px 40px;
+	// 		.row {
+	// 			.form {
+	// 				border-radius: 8px 0 0 8px;
+	// 				padding: 120px 40px;
 
-					background-color: #fff;
+	// 				background-color: #fff;
 
-					h4 {
-						padding-bottom: 0.75rem;
-						margin: 0 auto 2rem auto;
-						width: 80%;
-						border-bottom: 1px solid #c0c0c0;
-					}
-				}
+	// 				h4 {
+	// 					padding-bottom: 0.75rem;
+	// 					margin: 0 auto 2rem auto;
+	// 					width: 80%;
+	// 					border-bottom: 1px solid #c0c0c0;
+	// 				}
+	// 			}
 
-				.banner {
-					border-radius: 0 8px 8px 0;
+	// 			.banner {
+	// 				border-radius: 0 8px 8px 0;
 
-					background-color: #f2f2f2;
-				}
+	// 				background-color: #f2f2f2;
+	// 			}
 
-				.btn {
-					background-color: #049dd9;
-					color: #fff;
-				}
+	// 			.btn {
+	// 				background-color: #049dd9;
+	// 				color: #fff;
+	// 			}
 
-				.btn:hover {
-					background-color: #048abf;
-					color: #fff;
-				}
-			}
-		}
-	}
+	// 			.btn:hover {
+	// 				background-color: #048abf;
+	// 				color: #fff;
+	// 			}
+	// 		}
+	// 	}
+	// }
 }

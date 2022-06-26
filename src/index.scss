@@ -21,3 +21,36 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
 }
+
+.login-modal-body,
+.register-modal-body {
+	.form {
+		border-radius: 16px 0 0 16px;
+		padding: 120px 40px;
+
+		background-color: #fff;
+
+		h4 {
+			padding-bottom: 0.75rem;
+			margin: 0 auto 2rem auto;
+			width: 80%;
+			border-bottom: 1px solid #c0c0c0;
+		}
+	}
+
+	.banner {
+		border-radius: 0 8px 8px 0;
+
+		background-color: #f2f2f2;
+	}
+
+	.btn {
+		background-color: #049dd9;
+		color: #fff;
+	}
+
+	.btn:hover {
+		background-color: #048abf;
+		color: #fff;
+	}
+}
