@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { questionsActions } from "../../../utils/questionsSlice";
 import { v4 as uuidv4 } from "uuid";
 import { QuestionEdit } from "../../../fragments/Questions/QuestionEdit";
+import axios from "axios";
 
 export default function QuestionEditPage() {
+	const user = useSelector((state) => state.auth.user);
 	let { questionId } = useParams();
 
 	const location = useLocation();
@@ -25,7 +27,6 @@ export default function QuestionEditPage() {
 	});
 
 	useEffect(() => {
-		// console.log(3);
 		questions.map((q) => {
 			if (q.questionId === questionId) {
 				setQuestion(q);
@@ -34,21 +35,51 @@ export default function QuestionEditPage() {
 	}, []);
 
 	const onSubmit = (question) => {
+		console.log(question);
 		if (location.pathname.includes("new")) {
-			dispatch(
-				questionsActions.add({
-					question: question,
-				})
-			);
+			axios({
+				method: "post",
+				url: "http://localhost:8080/scrutor_server_war_exploded/questions/",
+				headers: {
+					userId: user.userId,
+				},
+				data: {
+					content: question.content,
+					type: question.type,
+					difficulty: question.difficulty,
+					tags: question.tags,
+					options: question.options,
+				},
+			}).then((res, err) => {
+				console.log(res);
+				dispatch(questionsActions.add({ question: res.data }));
+				navigate("../");
+			});
 		} else {
-			dispatch(
-				questionsActions.update({
-					id: questionId,
-					newQuestion: question,
-				})
-			);
+			axios({
+				method: "put",
+				url: `http://localhost:8080/scrutor_server_war_exploded/questions/${question.questionId}`,
+				headers: {
+					userId: user.userId,
+				},
+				data: {
+					questionId: question.questionId,
+					content: question.content,
+					type: question.type,
+					difficulty: question.difficulty,
+					tags: question.tags,
+					options: question.options,
+				},
+			}).then((res) => {
+				dispatch(
+					questionsActions.update({
+						id: questionId,
+						newQuestion: res.data,
+					})
+				);
+				navigate("../");
+			});
 		}
-		navigate("../");
 	};
 
 	return (

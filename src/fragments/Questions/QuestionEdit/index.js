@@ -108,7 +108,7 @@ export const QuestionEdit = (props) => {
 
 	const onAddTag = () => {
 		const tags = [...props.question.tags];
-		tags.push(tagInput);
+		tags.push({ name: tagInput });
 		props.setQuestion({ ...props.question, tags });
 		setTagInput("");
 	};
@@ -356,7 +356,7 @@ export const QuestionEdit = (props) => {
 								key={index}
 								className="badge rounded-pill tag d-inline-block me-2"
 							>
-								<p className="d-inline-block me-1">{t}</p>
+								<p className="d-inline-block me-1">{t.name}</p>
 								<button
 									type="button"
 									className="tag-delete-btn d-inline-block"

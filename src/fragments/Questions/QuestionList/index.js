@@ -32,7 +32,7 @@ export default function QuestionList(props) {
 					key={q.questionId}
 					index={props.questions.indexOf(q) + 1}
 					question={q}
-					isChecked={q.isChecked}
+					isChecked={q.isChecked || false}
 					toggleIsChecked={() => {
 						const newQuestions = props.questions.map((q, index) => {
 							if (index === i) return { ...q, isChecked: !q.isChecked };

@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,12 +21,16 @@ import UnauthedHeader from "./fragments/UnauthedHeader";
 import Modal from "react-bootstrap/Modal";
 import QuizListPage from "./containers/QuizzesPage/QuizListPage";
 import QuizEditPage from "./containers/QuizzesPage/QuizEditPage";
+import { useCookies } from "react-cookie";
+import { questionsActions } from "./utils/questionsSlice";
 
 // const axios = require("axios").default;
 
 function App() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
+
+	const [cookies, setCookie] = useCookies(["userId"]);
 
 	const [loginForm, setLoginForm] = useState({
 		email: "",
@@ -43,6 +47,71 @@ function App() {
 
 	const [isShowLoginModal, setIsShowLoginModal] = useState(false);
 	const [isShowRegisterModal, setIsShowRegisterModal] = useState(false);
+
+	const questions = useSelector((state) => state.questions.questions);
+
+	useEffect(() => {
+		// Auto login
+		if (cookies.userId) {
+			axios({
+				method: "post",
+				url: "http://localhost:8080/scrutor_server_war_exploded/auth/auto-login",
+				data: {
+					userId: cookies.userId,
+				},
+			}).then((res, err) => {
+				if (err) {
+					console.log("Error");
+				}
+
+				dispatch(
+					authActions.set({
+						userId: res.data.userId,
+						email: res.data.userId,
+						fullName: res.data.fullName,
+						role: res.data.role,
+					})
+				);
+
+				setCookie("userId", res.data.userId, { path: "/" });
+			});
+		}
+	}, []);
+
+	useEffect(() => {
+		if (user && user.userId) {
+			if (user.role === "teacher") {
+				axios({
+					method: "get",
+					url: "http://localhost:8080/scrutor_server_war_exploded/questions",
+					headers: {
+						userId: user.userId,
+					},
+				}).then((res) => {
+					let questionList = res.data.map((question) => {
+						let newQuestion = {
+							questionId: question.questionId,
+							content: question.content,
+							type: question.type,
+							difficulty: question.difficulty,
+							teacherId: user.userId,
+							options: question.options.map((option) => ({
+								content: option.content,
+								isCorrect: option.isCorrect,
+							})),
+							tags: question.tags.map((tag) => ({ name: tag.name })),
+						};
+
+						dispatch(questionsActions.add({ question: newQuestion }));
+
+						return newQuestion;
+					});
+
+					console.log(questionList);
+				});
+			}
+		}
+	}, [user]);
 
 	const handleShowLoginModal = () => {
 		setIsShowLoginModal(true);
@@ -81,6 +150,8 @@ function App() {
 					role: res.data.role,
 				})
 			);
+
+			setCookie("userId", res.data.userId, { path: "/" });
 
 			// Reset login form
 			setLoginForm({

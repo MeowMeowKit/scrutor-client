@@ -1,14 +1,21 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { questionsActions } from "../../../utils/questionsSlice";
 import "./Question.scss";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 export default function Question(props) {
 	const question = props.question;
 
+	const user = useSelector((state) => state.auth.user);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const [cookies, setCookie] = useCookies(["userId"]);
 
 	useEffect(() => {
 		let content = document.querySelector(
@@ -29,7 +36,15 @@ export default function Question(props) {
 	});
 
 	const onDeleteQuestion = (id) => {
-		dispatch(questionsActions.remove({ id }));
+		axios({
+			method: "delete",
+			headers: {
+				userId: user.userId,
+			},
+			url: `http://localhost:8080/scrutor_server_war_exploded/questions/${id}`,
+		}).then((res, err) => {
+			if (res.data > 0) dispatch(questionsActions.remove({ id }));
+		});
 	};
 
 	return (
@@ -61,12 +76,9 @@ export default function Question(props) {
 
 			<div className="d-none d-md-block col-2 col-lg-2 ps-4 pe-4">
 				<p className="tags">
-					{question.tags.map((tag) => {
-						let str = tag;
-						str +=
-							question.tags.indexOf(tag) !== question.tags.length - 1
-								? ", "
-								: "";
+					{question.tags.map((tag, i) => {
+						let str = tag.name;
+						str += i !== question.tags.length - 1 ? ", " : "";
 						return str;
 					})}
 				</p>

@@ -1,8 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./AuthedHeader.scss";
 
 export default function AuthedHeader() {
+	const user = useSelector((state) => state.auth.user);
+
 	return (
 		<nav className="header navbar navbar-expand-lg navbar-light">
 			<div className="container-lg">
@@ -61,7 +64,8 @@ export default function AuthedHeader() {
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
 							>
-								<i className="fa-solid fa-circle-user avatar"></i> Nguyễn Văn A
+								<i className="fa-solid fa-circle-user avatar"></i>{" "}
+								{user.fullName}
 							</Link>
 							<ul className="dropdown-menu" aria-labelledby="navbarDropdown">
 								<li>
