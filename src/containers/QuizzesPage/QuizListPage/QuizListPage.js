@@ -1,5 +1,5 @@
 import React from "react";
-import QuizList from "../../../fragments/Quizzes/QuizList";
+import QuizList from "../../../fragments/Quizzes/QuizList/QuizList";
 
 export default function QuizListPage() {
 	return (

@@ -1,6 +1,6 @@
 import React from "react";
 import "./QuestionListPage.scss";
-import QuestionList from "../../../fragments/Questions/QuestionList";
+import QuestionList from "../../../fragments/Questions/QuestionList/QuestionList";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 

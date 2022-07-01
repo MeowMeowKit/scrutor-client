@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Question from "../Question";
+import Question from "../Question/Question";
 import "./QuestionList.scss";
 
 export default function QuestionList(props) {

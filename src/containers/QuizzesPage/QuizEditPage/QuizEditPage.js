@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { QuestionEdit } from "../../../fragments/Questions/QuestionEdit";
-import QuestionList from "../../../fragments/Questions/QuestionList";
+import { QuestionEdit } from "../../../fragments/Questions/QuestionEdit/QuestionEdit";
+import QuestionList from "../../../fragments/Questions/QuestionList/QuestionList";
 import { questionsActions } from "../../../utils/questionsSlice";
 import { quizzesActions } from "../../../utils/quizzesSlice";
 

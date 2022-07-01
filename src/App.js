@@ -8,19 +8,19 @@ import "./App.scss";
 
 import { authActions } from "./utils/authSlice";
 
-import HomePage from "./containers/HomePage";
-import QuestionsPage from "./containers/QuestionsPage";
-import ClassesPage from "./containers/ClassesPage";
+import HomePage from "./containers/HomePage/HomePage";
+import QuestionsPage from "./containers/QuestionsPage/QuestionsPage";
+import ClassesPage from "./containers/ClassesPage/ClassesPage";
 
-import QuestionListPage from "./containers/QuestionsPage/QuestionListPage";
-import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage";
-import QuizzesPage from "./containers/QuizzesPage";
-import AuthedHeader from "./fragments/AuthedHeader";
-import UnauthedHeader from "./fragments/UnauthedHeader";
+import QuestionListPage from "./containers/QuestionsPage/QuestionListPage/QuestionListPage";
+import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage/QuestionEditPage";
+import QuizzesPage from "./containers/QuizzesPage/QuizzesPage";
+import AuthedHeader from "./fragments/AuthedHeader/AuthedHeader";
+import UnauthedHeader from "./fragments/UnauthedHeader/UnauthedHeader";
 
 import Modal from "react-bootstrap/Modal";
-import QuizListPage from "./containers/QuizzesPage/QuizListPage";
-import QuizEditPage from "./containers/QuizzesPage/QuizEditPage";
+import QuizListPage from "./containers/QuizzesPage/QuizListPage/QuizListPage";
+import QuizEditPage from "./containers/QuizzesPage/QuizEditPage/QuizEditPage";
 import { useCookies } from "react-cookie";
 import { questionsActions } from "./utils/questionsSlice";
 
@@ -165,6 +165,7 @@ function App() {
 	};
 
 	const onRegister = () => {
+		console.log(registerForm);
 		axios({
 			method: "post",
 			url: "http://localhost:8080/scrutor_server_war_exploded/auth/register",
@@ -292,7 +293,7 @@ function App() {
 				dialogClassName="register-modal"
 			>
 				<Modal.Body>
-					<div className="modal-content container">
+					<div className="register-modal-content container">
 						<div className="row register-modal-body">
 							<form className="form d-inline-block col-12 col-md-6 col-lg-4">
 								<h4 className="text-center">Đăng ký</h4>
