@@ -6,6 +6,9 @@ export const questionsSlice = createSlice({
 		questions: [],
 	},
 	reducers: {
+		reset(state) {
+			state.questions = [];
+		},
 		add(state, action) {
 			state.questions.push(action.payload.question);
 		},

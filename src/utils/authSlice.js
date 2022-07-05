@@ -14,6 +14,9 @@ export const authSlice = createSlice({
 				role: action.payload.role,
 			};
 		},
+		reset(state) {
+			state.user = null;
+		},
 	},
 });
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { QuestionEdit } from "../../../fragments/Questions/QuestionEdit/QuestionEdit";
 import QuestionList from "../../../fragments/Questions/QuestionList/QuestionList";
 import { questionsActions } from "../../../utils/questionsSlice";
@@ -11,8 +10,10 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 import "./QuizEditPage.scss";
+import axios from "axios";
 
 export default function QuizEditPage() {
+	const user = useSelector((state) => state.auth.user);
 	let { quizId } = useParams();
 	const location = useLocation();
 
@@ -23,8 +24,8 @@ export default function QuizEditPage() {
 	const questions = useSelector((state) => state.questions.questions);
 
 	const [quiz, setQuiz] = useState({
-		quizId: uuidv4(),
-		quizName: "",
+		quizId: null,
+		title: "",
 		description: "",
 		teacherId: "teacher1",
 		startAt: new Date(),
@@ -39,28 +40,31 @@ export default function QuizEditPage() {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
-		quizzes.map((quiz) => {
-			if (quiz.quizId === quizId) {
-				setQuiz(quiz);
+		setQuestionList(questions);
+		setTmpQuestionList(questions);
 
-				const list = questions.map((question) => {
-					let isChecked = false;
+		if (location.pathname.includes("edit")) {
+			quizzes.map((quiz) => {
+				if (quiz.quizId === quizId) {
+					setQuiz(quiz);
 
-					for (let i = 0; i < quiz.questions.length; ++i) {
-						if (quiz.questions[i].questionId === question.questionId) {
-							isChecked = true;
+					const list = questions.map((question) => {
+						let isChecked = false;
+
+						for (let i = 0; i < quiz.questions.length; ++i) {
+							if (quiz.questions[i].questionId === question.questionId) {
+								isChecked = true;
+							}
 						}
-					}
 
-					return { ...question, isChecked };
-				});
+						return { ...question, isChecked };
+					});
 
-				console.log(list);
-
-				setQuestionList(list);
-				setTmpQuestionList(list);
-			}
-		});
+					setQuestionList(list);
+					setTmpQuestionList(list);
+				}
+			});
+		}
 
 		return () => {
 			handleClose();
@@ -74,8 +78,8 @@ export default function QuizEditPage() {
 
 	const handleShow = () => setShow(true);
 
-	const onChangeQuizName = (e) => {
-		setQuiz({ ...quiz, quizName: e.target.value });
+	const onChangeQuestionTitle = (e) => {
+		setQuiz({ ...quiz, title: e.target.value });
 	};
 
 	const onChangeQuizDescription = (e) => {
@@ -97,7 +101,7 @@ export default function QuizEditPage() {
 	const onChangeQuestionPoint = (e, questionId) => {
 		const questions = quiz.questions.map((question) => {
 			if (question.questionId === questionId)
-				return { ...question, point: e.target.value };
+				return { ...question, point: +e.target.value };
 			else return question;
 		});
 
@@ -125,7 +129,6 @@ export default function QuizEditPage() {
 	};
 
 	const onSubmitQuestion = (question) => {
-		console.log(question);
 		dispatch(
 			questionsActions.update({
 				id: question.questionId,
@@ -134,11 +137,66 @@ export default function QuizEditPage() {
 		);
 	};
 
+	const onDeleteQuiz = (id) => {
+		axios({
+			method: "delete",
+			url: `http://localhost:8080/scrutor_server_war_exploded/quizzes/${quiz.quizId}`,
+			headers: {
+				userId: user.userId,
+				role: user.role,
+			},
+		}).then((res, err) => {
+			dispatch(quizzesActions.remove({ id: quizId }));
+			navigate("/quizzes");
+		});
+	};
+
 	const onSubmit = () => {
 		if (location.pathname.includes("new")) {
+			axios({
+				method: "post",
+				url: "http://localhost:8080/scrutor_server_war_exploded/quizzes/",
+				headers: {
+					userId: user.userId,
+					role: user.role,
+				},
+				data: {
+					title: quiz.title,
+					description: quiz.description,
+					questions: quiz.questions.map((q) => ({
+						questionId: q.questionId,
+						point: q.point,
+					})),
+				},
+			}).then((res, err) => {
+				dispatch(
+					quizzesActions.add({ newQuiz: { ...quiz, quizId: res.data.quizId } })
+				);
+				navigate("../");
+			});
 		} else {
-			dispatch(quizzesActions.update({ id: quizId, newQuiz: quiz }));
+			axios({
+				method: "put",
+				url: `http://localhost:8080/scrutor_server_war_exploded/quizzes/${quiz.quizId}`,
+				headers: {
+					userId: user.userId,
+					role: user.role,
+				},
+				data: {
+					title: quiz.title,
+					description: quiz.description,
+					questions: quiz.questions.map((q) => ({
+						questionId: q.questionId,
+						point: q.point,
+					})),
+				},
+			}).then((res, err) => {
+				dispatch(quizzesActions.update({ id: quizId, newQuiz: quiz }));
+				navigate("../");
+			});
 		}
+
+		console.log(quiz);
 
 		navigate("/quizzes");
 	};
@@ -147,7 +205,7 @@ export default function QuizEditPage() {
 		<>
 			<Modal show={show} onHide={handleClose} size="xl">
 				<Modal.Header closeButton>
-					<Modal.Title>Thêm câu hỏi</Modal.Title>
+					<Modal.Title>Chọn câu hỏi</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<QuestionList
@@ -168,7 +226,7 @@ export default function QuizEditPage() {
 							onAddQuestions();
 						}}
 					>
-						Thêm
+						Xác nhận
 					</Button>
 				</Modal.Footer>
 			</Modal>
@@ -180,19 +238,35 @@ export default function QuizEditPage() {
 							type="text"
 							className="form-control quiz-name-input mb-1 d-inline-block"
 							placeholder="Tiêu đề"
-							value={quiz.quizName}
+							value={quiz.title}
 							onChange={(e) => {
-								onChangeQuizName(e);
+								onChangeQuestionTitle(e);
 							}}
 						/>
-						<button
-							className="btn position-absolute top-0 end-0"
-							onClick={() => {
-								onSubmit();
-							}}
-						>
-							Lưu
-						</button>
+						<div className="position-absolute top-0 end-0">
+							{location.pathname.includes("edit") ? (
+								<button
+									className="btn delete-btn me-2"
+									onClick={() => {
+										onDeleteQuiz(quiz.quizId);
+									}}
+								>
+									Xóa
+								</button>
+							) : (
+								""
+							)}
+
+							<button
+								className="btn"
+								onClick={() => {
+									onSubmit();
+								}}
+							>
+								Lưu
+							</button>
+						</div>
+
 						<textarea
 							className="form-control p-2 quiz-description-input"
 							placeholder="Mô tả"

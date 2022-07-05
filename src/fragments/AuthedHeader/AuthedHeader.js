@@ -1,10 +1,21 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useCookies } from "react-cookie";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { authActions } from "../../utils/authSlice";
 import "./AuthedHeader.scss";
 
 export default function AuthedHeader() {
 	const user = useSelector((state) => state.auth.user);
+	const dispatch = useDispatch();
+
+	const [cookies, setCookie, removeCookie] = useCookies(["userId"]);
+
+	const onLogOut = () => {
+		dispatch(authActions.reset());
+
+		removeCookie("userId");
+	};
 
 	return (
 		<nav className="header navbar navbar-expand-lg navbar-light">
@@ -77,9 +88,14 @@ export default function AuthedHeader() {
 									<hr className="dropdown-divider" />
 								</li>
 								<li>
-									<Link className="dropdown-item" to="#">
+									<button
+										className="dropdown-item"
+										onClick={() => {
+											onLogOut();
+										}}
+									>
 										Đăng xuất
-									</Link>
+									</button>
 								</li>
 							</ul>
 						</li>

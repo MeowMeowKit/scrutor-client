@@ -13,7 +13,8 @@ export default function Quiz(props) {
 				</button>
 			</div>
 			<div className="content">
-				<h5 className="title">{quiz.quizName}</h5>
+				<h5 className="title">{quiz.title}</h5>
+				<p className="sub-title">{quiz.description}</p>
 				<p className="sub-title">{`${quiz.questions.length} câu`}</p>
 			</div>
 		</Link>

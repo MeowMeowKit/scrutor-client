@@ -17,7 +17,7 @@ export default function QuestionEditPage() {
 
 	const questions = useSelector((state) => state.questions.questions);
 	const [question, setQuestion] = useState({
-		questionId: uuidv4(),
+		questionId: null,
 		content: "",
 		type: "SAMC",
 		difficulty: 0,

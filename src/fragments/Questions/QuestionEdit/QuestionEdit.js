@@ -87,6 +87,9 @@ export const QuestionEdit = (props) => {
 	};
 
 	const onToggleFillAnswer = () => {
+		if (props.question.options.length === 0) {
+			props.setQuestion({ ...props.question, options: [""] });
+		}
 		setHasFillAnswer(!hasFillAnswer);
 	};
 
@@ -123,7 +126,9 @@ export const QuestionEdit = (props) => {
 		let submitQuestion = { ...props.question };
 		let options = [...props.question.options];
 		if (props.question.type === "F")
-			options = [{ content: options[0].content, isCorrect: true }];
+			options = hasFillAnswer
+				? [{ content: options[0].content, isCorrect: true }]
+				: [];
 		submitQuestion.options = [...options];
 
 		props.onSubmit(submitQuestion);

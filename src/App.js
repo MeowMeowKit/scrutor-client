@@ -23,6 +23,7 @@ import QuizListPage from "./containers/QuizzesPage/QuizListPage/QuizListPage";
 import QuizEditPage from "./containers/QuizzesPage/QuizEditPage/QuizEditPage";
 import { useCookies } from "react-cookie";
 import { questionsActions } from "./utils/questionsSlice";
+import { quizzesActions } from "./utils/quizzesSlice";
 
 // const axios = require("axios").default;
 
@@ -78,39 +79,82 @@ function App() {
 		}
 	}, []);
 
-	useEffect(() => {
-		if (user && user.userId) {
-			if (user.role === "teacher") {
-				axios({
-					method: "get",
-					url: "http://localhost:8080/scrutor_server_war_exploded/questions",
-					headers: {
-						userId: user.userId,
-					},
-				}).then((res) => {
-					let questionList = res.data.map((question) => {
-						let newQuestion = {
-							questionId: question.questionId,
-							content: question.content,
-							type: question.type,
-							difficulty: question.difficulty,
-							teacherId: user.userId,
-							options: question.options.map((option) => ({
-								content: option.content,
-								isCorrect: option.isCorrect,
-							})),
-							tags: question.tags.map((tag) => ({ name: tag.name })),
-						};
+	const fetchQuestions = async () => {
+		axios({
+			method: "get",
+			url: "http://localhost:8080/scrutor_server_war_exploded/questions",
+			headers: {
+				userId: user.userId,
+				role: user.role,
+			},
+		}).then((res) => {
+			console.log(res);
+			if (res.data) {
+				dispatch(questionsActions.reset());
+				let questionList = res.data.map((question) => {
+					let newQuestion = {
+						questionId: question.questionId,
+						content: question.content,
+						type: question.type,
+						difficulty: question.difficulty,
+						teacherId: user.userId,
+						options: question.options.map((option) => ({
+							content: option.content,
+							isCorrect: option.isCorrect,
+						})),
+						tags: question.tags.map((tag) => ({ name: tag.name })),
+					};
 
-						dispatch(questionsActions.add({ question: newQuestion }));
+					dispatch(questionsActions.add({ question: newQuestion }));
 
-						return newQuestion;
-					});
-
-					console.log(questionList);
+					return newQuestion;
 				});
 			}
-		}
+		});
+	};
+
+	const fetchQuizzes = async () => {
+		axios({
+			method: "get",
+			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes",
+			headers: {
+				userId: user.userId,
+				role: user.role,
+			},
+		}).then((res) => {
+			if (res.data) {
+				dispatch(quizzesActions.reset());
+
+				let quizList = res.data.map((quiz) => {
+					let newQuiz = {
+						quizId: quiz.quizId,
+						teacherId: quiz.teacherId,
+						title: quiz.title,
+						description: quiz.description,
+						questions: quiz.questions,
+					};
+
+					console.log(newQuiz);
+
+					dispatch(quizzesActions.add({ newQuiz: newQuiz }));
+
+					return newQuiz;
+				});
+			}
+		});
+	};
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (user && user.userId) {
+				if (user.role === "teacher") {
+					await fetchQuestions();
+					await fetchQuizzes();
+				}
+			}
+		};
+
+		fetchData();
 	}, [user]);
 
 	const handleShowLoginModal = () => {
@@ -407,6 +451,7 @@ function App() {
 					</Route>
 					<Route path="quizzes" element={<QuizzesPage />}>
 						<Route path="" element={<QuizListPage />}></Route>
+						<Route path="new" element={<QuizEditPage />}></Route>
 						<Route path=":quizId/edit" element={<QuizEditPage />}></Route>
 					</Route>
 					<Route path="classes" element={<ClassesPage />}></Route>
