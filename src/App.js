@@ -15,7 +15,7 @@ import ClassesPage from "./containers/ClassesPage/ClassesPage";
 import QuestionListPage from "./containers/QuestionsPage/QuestionListPage/QuestionListPage";
 import QuestionEditPage from "./containers/QuestionsPage/QuestionEditPage/QuestionEditPage";
 import QuizzesPage from "./containers/QuizzesPage/QuizzesPage";
-import AuthedHeader from "./fragments/AuthedHeader/AuthedHeader";
+import TeacherHeader from "./fragments/TeacherHeader/TeacherHeader";
 import UnauthedHeader from "./fragments/UnauthedHeader/UnauthedHeader";
 
 import Modal from "react-bootstrap/Modal";
@@ -24,6 +24,8 @@ import QuizEditPage from "./containers/QuizzesPage/QuizEditPage/QuizEditPage";
 import { useCookies } from "react-cookie";
 import { questionsActions } from "./utils/questionsSlice";
 import { quizzesActions } from "./utils/quizzesSlice";
+import StudentHeader from "./fragments/StudentHeader/StudentHeader";
+import QuizAttendPage from "./containers/QuizzesPage/QuizAttendPage/QuizAttendPage";
 
 // const axios = require("axios").default;
 
@@ -116,7 +118,7 @@ function App() {
 	const fetchQuizzes = async () => {
 		axios({
 			method: "get",
-			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes",
+			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes/",
 			headers: {
 				userId: user.userId,
 				role: user.role,
@@ -241,7 +243,11 @@ function App() {
 	return (
 		<div className="app">
 			{user ? (
-				<AuthedHeader />
+				user.role === "teacher" ? (
+					<TeacherHeader />
+				) : (
+					<StudentHeader />
+				)
 			) : (
 				<UnauthedHeader
 					showLoginModal={handleShowLoginModal}
@@ -453,6 +459,7 @@ function App() {
 						<Route path="" element={<QuizListPage />}></Route>
 						<Route path="new" element={<QuizEditPage />}></Route>
 						<Route path=":quizId/edit" element={<QuizEditPage />}></Route>
+						<Route path=":quizId/attend" element={<QuizAttendPage />}></Route>
 					</Route>
 					<Route path="classes" element={<ClassesPage />}></Route>
 				</Routes>

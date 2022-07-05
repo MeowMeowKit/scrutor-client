@@ -1,20 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../../utils/authSlice";
-import "./AuthedHeader.scss";
+import "./StudentHeader.scss";
 
-export default function AuthedHeader() {
+export default function StudentHeader() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
 
 	const [cookies, setCookie, removeCookie] = useCookies(["userId"]);
+	let navigate = useNavigate();
+
+	const [searchInput, setSearchInput] = useState("");
 
 	const onLogOut = () => {
 		dispatch(authActions.reset());
 
 		removeCookie("userId");
+	};
+
+	const onChangeSearchInput = (e) => {
+		setSearchInput(e.target.value);
+	};
+
+	const onSubmitSearchInput = () => {
+		navigate(`quizzes/${searchInput}/attend`);
 	};
 
 	return (
@@ -41,21 +52,22 @@ export default function AuthedHeader() {
 							type="search"
 							placeholder="Tìm kiếm"
 							aria-label="Search"
+							value={searchInput}
+							onChange={(e) => {
+								onChangeSearchInput(e);
+							}}
 						/>
-						<button className="search-btn" type="button">
+						<button
+							className="search-btn"
+							type="button"
+							onClick={() => {
+								onSubmitSearchInput();
+							}}
+						>
 							<i className="fa-solid fa-magnifying-glass"></i>
 						</button>
 					</form>
 					<ul className="navbar-nav mb-2 mb-lg-0">
-						<li className="nav-item d-lg-inline-block">
-							<Link
-								className="nav-link active"
-								aria-current="page"
-								to="/questions"
-							>
-								Câu hỏi
-							</Link>
-						</li>
 						<li className="nav-item d-lg-inline-block">
 							<Link className="nav-link" to="/quizzes">
 								Bài kiểm tra
