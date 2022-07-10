@@ -25,7 +25,7 @@ export default function StudentHeader() {
 	};
 
 	const onSubmitSearchInput = () => {
-		navigate(`quizzes/${searchInput}/attend`);
+		navigate(`quizzes/${searchInput}/attempt`);
 	};
 
 	return (
@@ -69,7 +69,7 @@ export default function StudentHeader() {
 					</form>
 					<ul className="navbar-nav mb-2 mb-lg-0">
 						<li className="nav-item d-lg-inline-block">
-							<Link className="nav-link" to="/quizzes">
+							<Link className="nav-link" to="/quizzes/attempted">
 								Bài kiểm tra
 							</Link>
 						</li>

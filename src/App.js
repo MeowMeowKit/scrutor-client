@@ -25,7 +25,10 @@ import { useCookies } from "react-cookie";
 import { questionsActions } from "./utils/questionsSlice";
 import { quizzesActions } from "./utils/quizzesSlice";
 import StudentHeader from "./fragments/StudentHeader/StudentHeader";
-import QuizAttendPage from "./containers/QuizzesPage/QuizAttendPage/QuizAttendPage";
+import QuizAttemptPage from "./containers/QuizzesPage/QuizAttemptPage/QuizAttemptPage";
+import { attemptsActions } from "./utils/attemptsSlice";
+import AttemptListPage from "./containers/QuizzesPage/AttemptListPage/AttemptListPage";
+import AttemptDetailPage from "./containers/QuizzesPage/AttemptDetailPage/AttemptDetailPage";
 
 // const axios = require("axios").default;
 
@@ -50,8 +53,6 @@ function App() {
 
 	const [isShowLoginModal, setIsShowLoginModal] = useState(false);
 	const [isShowRegisterModal, setIsShowRegisterModal] = useState(false);
-
-	const questions = useSelector((state) => state.questions.questions);
 
 	useEffect(() => {
 		// Auto login
@@ -146,12 +147,58 @@ function App() {
 		});
 	};
 
+	const fetchAttempts = async () => {
+		axios({
+			method: "get",
+			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes/",
+			headers: {
+				userId: user.userId,
+				role: user.role,
+			},
+		}).then((res) => {
+			if (res.data) {
+				dispatch(attemptsActions.reset());
+
+				let attemptList = res.data.map((attempt) => {
+					let newAttempt = {
+						attemptId: attempt.attemptId,
+						quiz: { ...attempt.quiz },
+						studentId: attempt.studentId,
+						grade: attempt.grade,
+						maxGrade: attempt.maxGrade,
+						questions: attempt.attemptQuestions.map((aq) => {
+							let question = {
+								...aq.question,
+								fillAnswer: aq.fillAnswer || null,
+							};
+
+							question.options = aq.attemptOptions.map((ao) => ({
+								...ao.option,
+								isChecked: ao.isChecked,
+							}));
+
+							return question;
+						}),
+					};
+
+					dispatch(attemptsActions.add({ newAttempt: newAttempt }));
+
+					return newAttempt;
+				});
+
+				console.log(res.data);
+			}
+		});
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			if (user && user.userId) {
 				if (user.role === "teacher") {
 					await fetchQuestions();
 					await fetchQuizzes();
+				} else if (user.role === "student") {
+					await fetchAttempts();
 				}
 			}
 		};
@@ -459,7 +506,12 @@ function App() {
 						<Route path="" element={<QuizListPage />}></Route>
 						<Route path="new" element={<QuizEditPage />}></Route>
 						<Route path=":quizId/edit" element={<QuizEditPage />}></Route>
-						<Route path=":quizId/attend" element={<QuizAttendPage />}></Route>
+						<Route path=":quizId/attempt" element={<QuizAttemptPage />}></Route>
+						<Route path="attempted" element={<AttemptListPage />}></Route>
+						<Route
+							path="attempted/:attemptId"
+							element={<AttemptDetailPage />}
+						></Route>
 					</Route>
 					<Route path="classes" element={<ClassesPage />}></Route>
 				</Routes>

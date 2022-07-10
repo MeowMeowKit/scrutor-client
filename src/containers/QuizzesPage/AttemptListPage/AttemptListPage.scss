@@ -1,0 +1,30 @@
+.attempt {
+	display: inline-block;
+	background-color: #fff;
+	padding: 16px;
+	border-radius: 8px;
+	margin-right: 0.5rem;
+	color: #000;
+	text-decoration: none;
+
+	.attempt-header {
+		display: flex;
+		justify-content: end;
+
+		.attempt-delete-btn {
+			border: none;
+			background-color: transparent;
+			color: #f55050;
+		}
+	}
+
+	.content {
+		text-align: center;
+		.title {
+			max-width: 160px;
+		}
+
+		.sub-title {
+		}
+	}
+}

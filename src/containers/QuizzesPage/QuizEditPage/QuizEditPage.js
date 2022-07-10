@@ -71,6 +71,34 @@ export default function QuizEditPage() {
 		};
 	}, []);
 
+	useEffect(() => {
+		setQuestionList(questions);
+		setTmpQuestionList(questions);
+
+		if (location.pathname.includes("edit")) {
+			quizzes.map((quiz) => {
+				if (quiz.quizId === quizId) {
+					setQuiz(quiz);
+
+					const list = questions.map((question) => {
+						let isChecked = false;
+
+						for (let i = 0; i < quiz.questions.length; ++i) {
+							if (quiz.questions[i].questionId === question.questionId) {
+								isChecked = true;
+							}
+						}
+
+						return { ...question, isChecked };
+					});
+
+					setQuestionList(list);
+					setTmpQuestionList(list);
+				}
+			});
+		}
+	}, [quizzes]);
+
 	const handleClose = () => {
 		setTmpQuestionList([...questionList]);
 		setShow(false);

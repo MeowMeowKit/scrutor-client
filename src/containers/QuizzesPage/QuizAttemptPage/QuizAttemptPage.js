@@ -2,9 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import "./QuizAttendPage.scss";
+import "./QuizAttemptPage.scss";
 
-export default function QuizAttendPage(props) {
+export default function QuizAttemptPage(props) {
 	let { quizId } = useParams();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
@@ -40,7 +40,7 @@ export default function QuizAttendPage(props) {
 						description: res.data.description,
 						questions: res.data.questions.map((q) => {
 							let options = q.options.map((o) => ({ ...o, isChecked: false }));
-							return { ...q, options, fillAnswer: "" };
+							return { ...q, options, fillAnswer: null };
 						}),
 					});
 				}
@@ -76,8 +76,10 @@ export default function QuizAttendPage(props) {
 
 	const onSubmit = () => {
 		let grade = 0;
+		let maxGrade = 0;
 
 		quiz.questions.map((question) => {
+			maxGrade += question.point;
 			if (question.type === "F") {
 				if (
 					question.options.length > 0 &&
@@ -103,7 +105,53 @@ export default function QuizAttendPage(props) {
 			}
 		});
 
-		alert(grade.toFixed(2));
+		console.log(quiz);
+		console.log({
+			quiz: {
+				quizId: quiz.quizId,
+			},
+			grade: grade.toFixed(2),
+			maxGrade: maxGrade.toFixed(2),
+			attemptQuestions: quiz.questions.map((q) => ({
+				question: {
+					questionId: q.questionId,
+				},
+				fillAnswer: q.fillAnswer,
+
+				attemptOptions: q.options.map((o) => ({
+					option: { optionId: o.optionId },
+					isChecked: o.isChecked,
+				})),
+			})),
+		});
+
+		axios({
+			method: "post",
+			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes/",
+			headers: {
+				userId: user.userId,
+				role: user.role,
+			},
+			data: {
+				quiz: {
+					quizId: quiz.quizId,
+				},
+				grade: grade.toFixed(2),
+				maxGrade: maxGrade.toFixed(2),
+				attemptQuestions: quiz.questions.map((q) => ({
+					question: {
+						questionId: q.questionId,
+					},
+					fillAnswer: q.fillAnswer,
+
+					attemptOptions: q.options.map((o) => ({
+						option: { optionId: o.optionId },
+						isChecked: o.isChecked,
+					})),
+				})),
+			},
+		});
+
 		navigate("/");
 	};
 
