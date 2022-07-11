@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { attemptsActions } from "../../../utils/attemptsSlice";
 import "./QuizAttemptPage.scss";
 
 export default function QuizAttemptPage(props) {
@@ -105,26 +106,6 @@ export default function QuizAttemptPage(props) {
 			}
 		});
 
-		console.log(quiz);
-		console.log({
-			quiz: {
-				quizId: quiz.quizId,
-			},
-			grade: grade.toFixed(2),
-			maxGrade: maxGrade.toFixed(2),
-			attemptQuestions: quiz.questions.map((q) => ({
-				question: {
-					questionId: q.questionId,
-				},
-				fillAnswer: q.fillAnswer,
-
-				attemptOptions: q.options.map((o) => ({
-					option: { optionId: o.optionId },
-					isChecked: o.isChecked,
-				})),
-			})),
-		});
-
 		axios({
 			method: "post",
 			url: "http://localhost:8080/scrutor_server_war_exploded/quizzes/",
@@ -150,9 +131,24 @@ export default function QuizAttemptPage(props) {
 					})),
 				})),
 			},
+		}).then((res) => {
+			console.log(res.data);
+
+			let newAttempt = {
+				attemptId: res.data.attemptId,
+				quiz: { ...quiz, quizId: res.data.quiz.quizId },
+				studentId: res.data.studentId,
+				grade: res.data.grade,
+				maxGrade: res.data.maxGrade,
+				questions: quiz.questions,
+			};
+
+			console.log(newAttempt);
+
+			dispatch(attemptsActions.add({ newAttempt: newAttempt }));
 		});
 
-		navigate("/");
+		navigate("/quizzes/attempted");
 	};
 
 	return (

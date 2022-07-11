@@ -53,10 +53,12 @@
 
 		.tag-input {
 			border: none;
+			cursor: text;
 		}
 
 		.tag-input:focus {
 			outline: none;
+			border: none !important;
 		}
 
 		.add-tag-btn {

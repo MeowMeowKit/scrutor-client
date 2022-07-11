@@ -162,23 +162,25 @@ function App() {
 				let attemptList = res.data.map((attempt) => {
 					let newAttempt = {
 						attemptId: attempt.attemptId,
-						quiz: { ...attempt.quiz },
+						quiz: {
+							...attempt.quiz,
+							questions: attempt.attemptQuestions.map((aq) => {
+								let question = {
+									...aq.question,
+									fillAnswer: aq.fillAnswer || null,
+								};
+
+								question.options = aq.attemptOptions.map((ao) => ({
+									...ao.option,
+									isChecked: ao.isChecked,
+								}));
+
+								return question;
+							}),
+						},
 						studentId: attempt.studentId,
 						grade: attempt.grade,
 						maxGrade: attempt.maxGrade,
-						questions: attempt.attemptQuestions.map((aq) => {
-							let question = {
-								...aq.question,
-								fillAnswer: aq.fillAnswer || null,
-							};
-
-							question.options = aq.attemptOptions.map((ao) => ({
-								...ao.option,
-								isChecked: ao.isChecked,
-							}));
-
-							return question;
-						}),
 					};
 
 					dispatch(attemptsActions.add({ newAttempt: newAttempt }));

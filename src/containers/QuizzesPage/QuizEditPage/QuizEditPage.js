@@ -264,7 +264,7 @@ export default function QuizEditPage() {
 					<div className="quiz-info position-relative">
 						<input
 							type="text"
-							className="form-control quiz-name-input mb-1 d-inline-block"
+							className="form-control quiz-title-input mb-1 d-inline-block"
 							placeholder="Tiêu đề"
 							value={quiz.title}
 							onChange={(e) => {

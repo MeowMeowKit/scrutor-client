@@ -1,8 +1,12 @@
 .quiz-edit-page {
-	.quiz-name-input {
+	.quiz-title-input {
 		width: 85%;
 		border: none;
 		font-size: 1.75rem;
+	}
+
+	.quiz-title-input:hover {
+		cursor: text;
 	}
 
 	.quiz-description-input {

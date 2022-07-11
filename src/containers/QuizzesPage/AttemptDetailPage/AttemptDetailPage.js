@@ -13,7 +13,6 @@ export default function AttemptDetailPage(props) {
 		quiz: null,
 		studentId: null,
 		grade: 0,
-		questions: [],
 	});
 
 	useEffect(() => {
@@ -45,7 +44,7 @@ export default function AttemptDetailPage(props) {
 					</div>
 				</div>
 			</div>
-			{attempt.questions.map((question, indexQuestion) => (
+			{attempt.quiz?.questions.map((question, indexQuestion) => (
 				<div className="container-lg box mb-3" key={indexQuestion}>
 					<form>
 						<h5 className="d-inline-block me-4">Câu {indexQuestion + 1}</h5>
