@@ -76,6 +76,15 @@ export default function AttemptDetailPage(props) {
 									style={{ height: "8rem" }}
 									value={question.fillAnswer}
 								></textarea>
+								<p
+									className={`option correct ${
+										question.fillAnswer === question.options[0].content
+											? "checked"
+											: ""
+									}`}
+								>
+									{question.options[0].content}
+								</p>
 							</div>
 						) : (
 							""

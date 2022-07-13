@@ -8,7 +8,6 @@ import "./App.scss";
 
 import { authActions } from "./utils/authSlice";
 
-import HomePage from "./containers/HomePage/HomePage";
 import QuestionsPage from "./containers/QuestionsPage/QuestionsPage";
 import ClassesPage from "./containers/ClassesPage/ClassesPage";
 
@@ -30,6 +29,8 @@ import { attemptsActions } from "./utils/attemptsSlice";
 import AttemptListPage from "./containers/QuizzesPage/AttemptListPage/AttemptListPage";
 import AttemptDetailPage from "./containers/QuizzesPage/AttemptDetailPage/AttemptDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { TeacherHomePage } from "./containers/TeacherHomePage/TeacherHomePage";
+import { HomePage } from "./containers/HomePage/HomePage";
 
 // const axios = require("axios").default;
 
@@ -37,7 +38,7 @@ function App() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
 
-	const [cookies, setCookie] = useCookies(["userId"]);
+	const [cookies, setCookie, removeCookie] = useCookies(["userId", "role"]);
 
 	const [loginForm, setLoginForm] = useState({
 		email: "",
@@ -79,6 +80,7 @@ function App() {
 				);
 
 				setCookie("userId", res.data.userId, { path: "/" });
+				setCookie("role", res.data.role, { path: "/" });
 			});
 		}
 	}, []);
@@ -248,6 +250,7 @@ function App() {
 			);
 
 			setCookie("userId", res.data.userId, { path: "/" });
+			setCookie("role", res.data.role, { path: "/" });
 
 			// Reset login form
 			setLoginForm({

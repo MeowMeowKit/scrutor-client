@@ -11,7 +11,7 @@ export const quizzesSlice = createSlice({
 		},
 		add(state, action) {
 			const { newQuiz } = action.payload;
-			state.quizzes.push(newQuiz);
+			state.quizzes.unshift(newQuiz);
 		},
 		remove(state, action) {
 			const { id } = action.payload;

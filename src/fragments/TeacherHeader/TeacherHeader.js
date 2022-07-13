@@ -9,12 +9,13 @@ export default function TeacherHeader() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
 
-	const [cookies, setCookie, removeCookie] = useCookies(["userId"]);
+	const [cookies, setCookie, removeCookie] = useCookies(["userId", "role"]);
 
 	const onLogOut = () => {
 		dispatch(authActions.reset());
 
 		removeCookie("userId");
+		removeCookie("role");
 	};
 
 	return (

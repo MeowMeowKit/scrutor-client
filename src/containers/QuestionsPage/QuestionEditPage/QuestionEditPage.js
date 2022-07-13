@@ -3,7 +3,7 @@ import "./QuestionEditPage.scss";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { questionsActions } from "../../../utils/questionsSlice";
-import { v4 as uuidv4 } from "uuid";
+
 import { QuestionEdit } from "../../../fragments/Questions/QuestionEdit/QuestionEdit";
 import axios from "axios";
 
@@ -21,7 +21,7 @@ export default function QuestionEditPage() {
 		content: "",
 		type: "SAMC",
 		difficulty: 0,
-		teacherId: "teacher1",
+		teacherId: null,
 		options: [],
 		tags: [],
 	});
@@ -35,7 +35,6 @@ export default function QuestionEditPage() {
 	}, []);
 
 	const onSubmit = (question) => {
-		console.log(question);
 		if (location.pathname.includes("new")) {
 			axios({
 				method: "post",
@@ -51,7 +50,6 @@ export default function QuestionEditPage() {
 					options: question.options,
 				},
 			}).then((res, err) => {
-				console.log(res);
 				dispatch(questionsActions.add({ question: res.data }));
 				navigate("../");
 			});

@@ -9,7 +9,7 @@ export default function StudentHeader() {
 	const user = useSelector((state) => state.auth.user);
 	const dispatch = useDispatch();
 
-	const [cookies, setCookie, removeCookie] = useCookies(["userId"]);
+	const [cookies, setCookie, removeCookie] = useCookies(["userId", "role"]);
 	let navigate = useNavigate();
 
 	const [searchInput, setSearchInput] = useState("");
@@ -18,6 +18,7 @@ export default function StudentHeader() {
 		dispatch(authActions.reset());
 
 		removeCookie("userId");
+		removeCookie("role");
 	};
 
 	const onChangeSearchInput = (e) => {

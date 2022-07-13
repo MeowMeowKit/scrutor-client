@@ -10,7 +10,7 @@ export const questionsSlice = createSlice({
 			state.questions = [];
 		},
 		add(state, action) {
-			state.questions.push(action.payload.question);
+			state.questions.unshift(action.payload.question);
 		},
 		remove(state, action) {
 			const { id } = action.payload;

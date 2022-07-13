@@ -11,7 +11,7 @@ export const attemptsSlice = createSlice({
 		},
 		add(state, action) {
 			const { newAttempt } = action.payload;
-			state.attempts.push(newAttempt);
+			state.attempts.unshift(newAttempt);
 		},
 		remove(state, action) {
 			const { id } = action.payload;

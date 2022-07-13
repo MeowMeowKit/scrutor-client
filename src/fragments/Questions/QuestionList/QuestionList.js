@@ -1,18 +1,103 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Question from "../Question/Question";
 import "./QuestionList.scss";
+import * as XLSX from "xlsx";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { questionsActions } from "../../../utils/questionsSlice";
 
 export default function QuestionList(props) {
+	// const [file, setFile] = useState();
+	const user = useSelector((state) => state.auth.user);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const onChangeFile = async (e) => {
+		const [file] = e.target.files;
+		const reader = new FileReader();
+
+		const toQuestionList = (data) => {
+			let questionList = [];
+
+			data.forEach((row, i) => {
+				if (row[0]) {
+					questionList.push({
+						content: row[1],
+						type: row[2],
+						difficulty: +row[3],
+						options: [],
+						tags: row[4].split(", ").map((tag) => ({ name: tag })),
+					});
+				} else {
+					questionList[questionList.length - 1].options.push({
+						content: row[1].toString(),
+						isCorrect: row[2] && row[2] === 1 ? true : false,
+					});
+				}
+			});
+
+			return questionList;
+		};
+
+		reader.onload = (evt) => {
+			const bstr = evt.target.result;
+			const wb = XLSX.read(bstr, { type: "binary" });
+			const wsname = wb.SheetNames[0];
+			const ws = wb.Sheets[wsname];
+			const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+			toQuestionList(data).map((question) => {
+				axios({
+					method: "post",
+					url: "http://localhost:8080/scrutor_server_war_exploded/questions/",
+					headers: {
+						userId: user.userId,
+						role: user.role,
+					},
+					data: {
+						content: question.content,
+						type: question.type,
+						difficulty: question.difficulty,
+						tags: question.tags,
+						options: question.options,
+					},
+				}).then((res, err) => {
+					dispatch(questionsActions.add({ question: res.data }));
+					navigate("/questions");
+				});
+			});
+		};
+		reader.readAsBinaryString(file);
+	};
+
 	return (
-		<div className="container-lg">
-			<Link
-				type="button"
-				className="add-question-btn btn mb-4"
-				to="/questions/new"
-			>
-				+ Tạo câu hỏi
-			</Link>
+		<div className="quiz-list container-lg">
+			<div className="d-inline-block mb-4">
+				<Link
+					type="button"
+					className="add-question-btn btn"
+					to="/questions/new"
+				>
+					+ Tạo câu hỏi
+				</Link>
+
+				<div className="ms-2 d-inline-block">
+					<label htmlFor="file" className="btn import-btn">
+						Nhập câu hỏi từ file
+					</label>
+					<input
+						type="file"
+						id="file"
+						style={{ visibility: "hidden" }}
+						className="d-inline-block"
+						onChange={(e) => {
+							onChangeFile(e);
+						}}
+					/>
+				</div>
+			</div>
+
 			<div className="row table-header">
 				<div className="col-auto pe-3"></div>
 				<div className="col-4 col-md-5 col-lg-7 ps-4 pe-4">
