@@ -1,5 +1,5 @@
 input {
-	background-color: #fff !important;
+	background-color: none !important;
 	cursor: default;
 }
 
@@ -14,4 +14,16 @@ input:focus {
 		color: #fff;
 		font-weight: 500;
 	}
+}
+
+.option.correct {
+	background-color: #fff8ed;
+}
+
+.option.checked {
+	background-color: #fce2e2;
+}
+
+.option.correct.checked {
+	background-color: #e7f8e2;
 }

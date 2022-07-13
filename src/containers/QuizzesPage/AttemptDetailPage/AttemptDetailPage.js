@@ -64,12 +64,7 @@ export default function AttemptDetailPage(props) {
 						</div>
 
 						<div className="mt-3 mb-2">
-							<textarea
-								className="form-control p-2"
-								placeholder="Đề bài"
-								style={{ height: "8rem" }}
-								value={question.content}
-							></textarea>
+							<p className="">{question.content}</p>
 						</div>
 
 						{/* Render fill answer */}
@@ -92,7 +87,9 @@ export default function AttemptDetailPage(props) {
 								return (
 									<div
 										key={indexOption}
-										className={`option mb-2 ${indexOption > 0 ? "mt-2" : ""}`}
+										className={`option mb-2 ${indexOption > 0 ? "mt-2" : ""} ${
+											o.isCorrect ? "correct" : ""
+										} ${o.isChecked ? "checked" : ""}`}
 									>
 										<input
 											className="d-inline-block me-2"
@@ -101,18 +98,17 @@ export default function AttemptDetailPage(props) {
 											name="option"
 											checked={o.isChecked}
 										/>
-
-										<input
-											className="form-control d-inline-block"
-											type="text"
-											value={o.content}
-											readOnly={true}
-										/>
+										<p className="d-inline-block m-0">{o.content}</p>
 									</div>
 								);
 							else if (question.type === "MAMC")
 								return (
-									<div key={indexOption} className="option mt-2 mb-2">
+									<div
+										key={indexOption}
+										className={`option mt-2 mb-2 ${
+											o.isCorrect ? "correct" : ""
+										} ${o.isChecked ? "checked" : ""}`}
+									>
 										<input
 											className="d-inline-block me-2"
 											id={`${question.questionId}_${indexOption}`}
@@ -121,12 +117,7 @@ export default function AttemptDetailPage(props) {
 											checked={o.isChecked}
 										/>
 
-										<input
-											className="form-control d-inline-block"
-											type="text"
-											value={o.content}
-											readOnly={true}
-										/>
+										<p className="d-inline-block m-0">{o.content}</p>
 									</div>
 								);
 						})}

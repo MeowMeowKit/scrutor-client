@@ -29,6 +29,7 @@ import QuizAttemptPage from "./containers/QuizzesPage/QuizAttemptPage/QuizAttemp
 import { attemptsActions } from "./utils/attemptsSlice";
 import AttemptListPage from "./containers/QuizzesPage/AttemptListPage/AttemptListPage";
 import AttemptDetailPage from "./containers/QuizzesPage/AttemptDetailPage/AttemptDetailPage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 // const axios = require("axios").default;
 
@@ -496,26 +497,97 @@ function App() {
 			<div className="body pt-4">
 				<Routes>
 					<Route path="" element={<HomePage />}></Route>
-					<Route path="questions" element={<QuestionsPage />}>
-						<Route path="" element={<QuestionListPage />}></Route>
-						<Route path="new" element={<QuestionEditPage />}></Route>
+					<Route
+						path="questions"
+						element={
+							<ProtectedRoute roles={["teacher"]}>
+								<QuestionsPage />
+							</ProtectedRoute>
+						}
+					>
+						<Route
+							path=""
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuestionListPage />
+								</ProtectedRoute>
+							}
+						></Route>
+						<Route
+							path="new"
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuestionEditPage />
+								</ProtectedRoute>
+							}
+						></Route>
 						<Route
 							path=":questionId/edit"
-							element={<QuestionEditPage />}
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuestionEditPage />
+								</ProtectedRoute>
+							}
 						></Route>
 					</Route>
 					<Route path="quizzes" element={<QuizzesPage />}>
-						<Route path="" element={<QuizListPage />}></Route>
-						<Route path="new" element={<QuizEditPage />}></Route>
-						<Route path=":quizId/edit" element={<QuizEditPage />}></Route>
-						<Route path=":quizId/attempt" element={<QuizAttemptPage />}></Route>
-						<Route path="attempted" element={<AttemptListPage />}></Route>
+						<Route
+							path=""
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuizListPage />
+								</ProtectedRoute>
+							}
+						></Route>
+						<Route
+							path="new"
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuizEditPage />
+								</ProtectedRoute>
+							}
+						></Route>
+						<Route
+							path=":quizId/edit"
+							element={
+								<ProtectedRoute roles={["teacher"]}>
+									<QuizEditPage />
+								</ProtectedRoute>
+							}
+						></Route>
+						<Route
+							path=":quizId/attempt"
+							element={
+								<ProtectedRoute roles={["student"]}>
+									<QuizAttemptPage />
+								</ProtectedRoute>
+							}
+						></Route>
+						<Route
+							path="attempted"
+							element={
+								<ProtectedRoute roles={["student"]}>
+									<AttemptListPage />
+								</ProtectedRoute>
+							}
+						></Route>
 						<Route
 							path="attempted/:attemptId"
-							element={<AttemptDetailPage />}
+							element={
+								<ProtectedRoute roles={["student"]}>
+									<AttemptDetailPage />
+								</ProtectedRoute>
+							}
 						></Route>
 					</Route>
-					<Route path="classes" element={<ClassesPage />}></Route>
+					<Route
+						path="classes"
+						element={
+							<ProtectedRoute roles={["teacher"]}>
+								<ClassesPage />
+							</ProtectedRoute>
+						}
+					></Route>
 				</Routes>
 			</div>
 		</div>
